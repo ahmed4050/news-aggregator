@@ -181,11 +181,11 @@ header h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:8px
 
 .ticker-bar{background:var(--hdr-bg);border-bottom:2px solid var(--accent);overflow:hidden;display:flex;align-items:stretch;height:36px}
 .ticker-bar .ticker-lbl2{background:var(--accent);color:#fff;font-weight:700;font-size:11px;padding:0 14px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px;position:relative;z-index:2}
-.ticker-bar .ticker-trk{flex:1;overflow:hidden;position:relative;display:flex;align-items:center}
+.ticker-bar .ticker-trk{flex:1;overflow:hidden;position:relative;display:flex;align-items:center;direction:ltr}
 .ticker-bar .ticker-inner{display:inline-flex;align-items:center;white-space:nowrap;will-change:transform}
 .ticker-bar .ticker-inner.running{animation:tickerScroll linear infinite}
-@keyframes tickerScroll{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
-.ticker-bar .t-item{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--hdr-txt);padding:0 24px;border-right:1px solid rgba(255,255,255,.1)}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-bar .t-item{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--hdr-txt);padding:0 24px;border-left:1px solid rgba(255,255,255,.1);direction:rtl}
 .ticker-bar .t-item .t-src{font-size:9px;background:rgba(255,255,255,.12);padding:2px 7px;border-radius:3px;flex-shrink:0}
 .ticker-bar .t-item a{color:#7dd3fc;text-decoration:none;transition:color .2s}
 .ticker-bar .t-item a:hover{color:#bae6fd;text-decoration:underline}
@@ -337,13 +337,17 @@ function ta(d){if(!d)return"";var t=new Date(d);if(isNaN(t))return"";var n=Date.
 function ut(){
   var inner=document.getElementById("newsTickerInner");if(!inner)return;
   if(!allNews.length){inner.className="ticker-inner";inner.textContent="جاري تحميل الأخبار العاجلة...";return}
-  var items=allNews.slice(0,20).map(function(n){
+  var html=allNews.slice(0,20).map(function(n){
     return'<span class="t-item"><span class="t-src">'+esc(n.sName||"")+'</span><a href="'+n.link+'" target="_blank" rel="noopener">'+esc(n.title)+'</a></span>'
   }).join("");
-  /* نكرر المحتوى مرتين لضمان الاستمرارية بلا انقطاع */
-  inner.innerHTML=items+items;
-  /* احسب مدة الحركة بناءً على عدد الأخبار */
-  var dur=Math.max(30,allNews.slice(0,20).length*4)+"s";
+  /* نكرر المحتوى مرتين: عند انتهاء النسخة الأولى تبدأ الثانية بلا انقطاع */
+  inner.className="ticker-inner";
+  inner.style.animation="none";
+  inner.innerHTML=html+html;
+  /* احسب السرعة: 80px لكل ثانية */
+  void inner.offsetWidth;
+  var totalW=inner.scrollWidth;
+  var dur=Math.round((totalW/2)/80)+"s";
   inner.style.animationDuration=dur;
   inner.className="ticker-inner running";
 }
