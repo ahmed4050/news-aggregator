@@ -102,6 +102,17 @@ header h1{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px
 .forecast-day .day-name{font-size:12px;opacity:.7}
 .forecast-day .day-icon{font-size:20px;margin:4px 0}
 .forecast-day .day-temp{font-size:14px;font-weight:600}
+.ticker-bar{background:var(--header-bg);border-bottom:2px solid var(--accent);padding:6px 0;overflow:hidden;position:relative;display:flex;align-items:center}
+.ticker-bar .ticker-label{background:var(--accent);color:#fff;font-weight:700;font-size:12px;padding:4px 14px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:4px;margin:0;border-radius:0;position:relative;z-index:2}
+.ticker-bar .ticker-track{flex:1;overflow:hidden;padding:0 16px;position:relative}
+.ticker-bar .ticker-slide{display:flex;white-space:nowrap;animation:tickerScroll 40s linear infinite;width:max-content}
+.ticker-bar .ticker-slide:hover{animation-play-state:paused}
+.ticker-bar .ticker-item{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--header-text);padding:0 24px;border-left:1px solid rgba(255,255,255,.15)}
+.ticker-bar .ticker-item:last-child{border-left:none}
+.ticker-bar .ticker-item .ticker-src{font-size:10px;background:rgba(255,255,255,.15);padding:1px 8px;border-radius:4px;flex-shrink:0}
+.ticker-bar .ticker-item a{color:#7dd3fc;text-decoration:none}
+.ticker-bar .ticker-item a:hover{text-decoration:underline;color:#bae6fd}
+@keyframes tickerScroll{0%{transform:translate3d(100%,0,0)}100%{transform:translate3d(-100%,0,0)}}
 footer{text-align:center;padding:20px;color:var(--text-secondary);font-size:13px;border-top:1px solid var(--border);margin-top:20px}
 footer .contact-info{margin-top:6px;font-size:12px}
 </style>
@@ -120,6 +131,12 @@ footer .contact-info{margin-top:6px;font-size:12px}
     </div>
   </div>
 </header>
+<div class="ticker-bar" id="tickerBar">
+  <div class="ticker-label">&#x1F4A5; عاجل</div>
+  <div class="ticker-track">
+    <div class="ticker-slide" id="newsTickerSlide"></div>
+  </div>
+</div>
 <div id="newsSection" class="section">
   <div class="filters" id="filters"></div>
   <div class="loading" id="loading">
@@ -178,6 +195,10 @@ var S=[
 var CT=300000,RI=600000,allNews=[],af="all",rt=null;
 function esc(t){if(!t)return"";var d=document.createElement("div");d.textContent=t;return d.innerHTML}
 function ta(d){if(!d)return"";var t=new Date(d);if(isNaN(t))return"";var n=Date.now()-t,m=Math.floor(n/60000);if(m<1)return"الآن";if(m<60)return"منذ "+m+" د"+(m>1?"ق":"");var h=Math.floor(m/60);if(h<24)return"منذ "+h+" س"+(h>1?"ة":"");var q=Math.floor(h/24);if(q<7)return"منذ "+q+" ي"+(q>1?"وم":"");return t.toLocaleDateString("ar-SA",{month:"short",day:"numeric"})}
+function ut(){var slide=document.getElementById("newsTickerSlide");if(!slide)return
+if(!allNews.length){slide.innerHTML='<span class="ticker-item">جاري تحميل الأخبار العاجلة...</span>';return}
+var items=allNews.slice(0,15).map(function(n,i){var src=n.sName||"";return'<span class="ticker-item"><span class="ticker-src">'+src+'</span><a href="'+n.link+'" target="_blank" rel="noopener">'+esc(n.title)+'</a></span>'}).join("")
+slide.innerHTML=items+items;var c=slide.cloneNode(true);slide.parentNode.replaceChild(c,slide);c.id="newsTickerSlide"}
 async function fr(s){var k="n_"+btoa(s.url),c=localStorage.getItem(k);if(c){try{var d=JSON.parse(c);if(Date.now()-d.ts<CT)return d.items}catch(e){}}
 var r=await fetch("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(s.url),{signal:AbortSignal.timeout(12000)})
 if(!r.ok)throw new Error("HTTP "+r.status)
@@ -200,7 +221,7 @@ try{var rs=await Promise.allSettled(S.map(function(s){return fr(s)}));allNews=[]
 rs.forEach(function(r,i){if(r.status==="fulfilled"){r.value.forEach(function(it){allNews.push(Object.assign({},it,{sId:S[i].id,sName:S[i].name}))})}})
 allNews.sort(function(a,b){return new Date(b.pubDate||0)-new Date(a.pubDate||0)})
 if(!allNews.length){er.style.display="block";document.getElementById("errorDetail").textContent="جميع المصادر غير متوفرة";ld.classList.remove("active");return}
-rf();rn();document.getElementById("lastUpdate").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"})
+rf();rn();ut();document.getElementById("lastUpdate").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"})
 var fl=rs.filter(function(r){return r.status==="rejected"}).length;st(fl?"تم التحديث. "+fl+" مصدر غير متوفر":"تم تحديث الأخبار")
 if(rt)clearTimeout(rt);rt=setTimeout(fan,RI)}catch(e){ld.classList.remove("active");er.style.display="block";document.getElementById("errorDetail").textContent=e.message}
 ld.classList.remove("active")}var G={"الداخلية":["نزوى","بهلا","منح","إزكي","سمائل","الحمراء","بدبد","ضنك"],"الظاهرة":["عبري","ينقل"],"شمال الباطنة":["صحار","شناص","لوى","صحم","الخابورة","السويق"],"جنوب الباطنة":["الرستاق","العوابي","نخل","وادي المعاول","المصنعة","بركاء"],"مسقط":["مسقط","مطرح","بوشر","السيب","قريات","العامرات"],"شمال الشرقية":["إبراء","المضيبي","القابل","وادي بني خالد"],"جنوب الشرقية":["صور","الكامل والوافي","جعلان بني بو علي","جعلان بني بو حسن"],"الوسطى":["هيماء","محوت","الدقم","الجازر"],"ظفار":["صلالة","طاقة","مرباط","سدح","رخيوت","ضلكوت","مقشن","ثمريت"],"مسندم":["خصب","بخا","دبا","مدحاء"]}
