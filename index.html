@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>موجز الأخبار السياسية والطقس</title>
+<title>موجز الأخبار والطقس</title>
 <style>
 :root {
   --bg: #f0f2f5; --card-bg: #fff; --text: #1a1a2e; --text-secondary: #555;
@@ -63,11 +63,14 @@ header h1{font-size:24px;font-weight:700;display:flex;align-items:center;gap:8px
 .card-img-ph{width:100%;height:170px;background:linear-gradient(135deg,var(--accent),#6aafff);display:flex;align-items:center;justify-content:center;font-size:36px;opacity:.6}
 .card-body{padding:14px;flex:1;display:flex;flex-direction:column}
 .card-src{display:inline-block;font-size:13px;font-weight:600;padding:3px 14px;border-radius:12px;margin-bottom:8px;width:fit-content}
-.card-src.bbc{background:#dc143c;color:#fff}
-.card-src.skynews{background:#0055a5;color:#fff}
-.card-src.cnn{background:#cc0000;color:#fff}
-.card-src.telegram{background:#1a8cdb;color:#fff}
-.card-src.telegram::before{content:"✈";margin-left:4px;font-size:11px}
+.card-src.alalam{background:#c0392b;color:#fff}
+.card-src.almayadeen{background:#1a5276;color:#fff}
+.card-src.almanar{background:#1e8449;color:#fff}
+.card-src.almasirah{background:#b7950b;color:#fff}
+.card-src.aletejah{background:#8e44ad;color:#fff}
+.card-src.alahad{background:#d35400;color:#fff}
+.card-src.alkawthar{background:#1a8cdb;color:#fff}
+.card-src.arabi21{background:#27ae60;color:#fff}
 .card-title{font-size:19px;font-weight:600;line-height:1.6;margin-bottom:8px;flex:1}
 .card-title a{color:var(--text)}
 .card-title a:hover{color:var(--accent)}
@@ -128,7 +131,7 @@ footer .contact-info{margin-top:8px;font-size:14px}
 </head>
 <body><header>
   <div class="header-inner">
-    <h1>&#x1F4F0; موجز السياسة والطقس</h1>
+    <h1>&#x1F4F0; موجز الأخبار والطقس</h1>
     <div class="tabs">
       <button class="tab-btn active" data-tab="news"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg> الأخبار</button>
       <button class="tab-btn" data-tab="weather"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> الطقس</button>
@@ -196,10 +199,14 @@ footer .contact-info{margin-top:8px;font-size:14px}
 </footer>
 <div class="toast" id="toast"></div><script>
 var S=[
-{id:"bbc",name:"BBC - شرق أوسط",url:"https://feeds.bbci.co.uk/arabic/middleeast/rss.xml"},
-{id:"skynews",name:"سكاي نيوز",url:"https://www.skynewsarabia.com/rss"},
-{id:"cnn",name:"CNN دولي",url:"http://arabic.cnn.com/World/rss"},
-{id:"telegram",name:"تليجرام",url:"https://rsshub.app/telegram/channel/Royy_tweets"}
+{id:"alalam",name:"العالم",url:"https://www.alalam.ir/rss"},
+{id:"almayadeen",name:"الميادين",url:"https://www.almayadeen.net/rss"},
+{id:"almanar",name:"المنار",url:"https://www.almanar.com.lb/rss.php"},
+{id:"almasirah",name:"المسيرة",url:"https://almasirah.net.ye/feed/rss"},
+{id:"aletejah",name:"الاتجاه",url:"https://rsshub.app/telegram/channel/Aletejahchanal"},
+{id:"alahad",name:"العهد",url:"https://rsshub.app/telegram/channel/alahadtvofficial"},
+{id:"alkawthar",name:"الكوثر",url:"https://rsshub.app/telegram/channel/alkawthartv"},
+{id:"arabi21",name:"عربي21",url:"https://arabi21.com/rss/index"}
 ];
 var CT=300000,RI=600000,allNews=[],af="all",rt=null;
 function esc(t){if(!t)return"";var d=document.createElement("div");d.textContent=t;return d.innerHTML}
