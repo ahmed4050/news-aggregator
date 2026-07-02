@@ -72,26 +72,28 @@ header h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:8px
 .card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s ease,filter .45s ease;filter:brightness(.75)}
 .card:hover .card-img{transform:scale(1.06);filter:brightness(.6)}
 .card-img-ph{position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:52px;opacity:.18}
-.card-img-ph.alalam{background:linear-gradient(145deg,#7b1010,#c0392b)}
-.card-img-ph.almayadeen{background:linear-gradient(145deg,#0d2a42,#1a5276)}
-.card-img-ph.almanar{background:linear-gradient(145deg,#0d3320,#1e8449)}
-.card-img-ph.almasirah{background:linear-gradient(145deg,#4a3600,#b7950b)}
-.card-img-ph.aletejah{background:linear-gradient(145deg,#3b1a5c,#8e44ad)}
-.card-img-ph.alahad{background:linear-gradient(145deg,#6b2400,#d35400)}
-.card-img-ph.alkawthar{background:linear-gradient(145deg,#0a3a5c,#1a8cdb)}
+.card-img-ph.aljazeera{background:linear-gradient(145deg,#003d25,#007744)}
+.card-img-ph.bbc{background:linear-gradient(145deg,#6b0000,#bb0000)}
+.card-img-ph.skynews{background:linear-gradient(145deg,#003060,#0064b4)}
+.card-img-ph.rt{background:linear-gradient(145deg,#111,#333)}
+.card-img-ph.france24{background:linear-gradient(145deg,#001a60,#0038a8)}
+.card-img-ph.aawsat{background:linear-gradient(145deg,#3a0a0a,#641414)}
 .card-img-ph.arabi21{background:linear-gradient(145deg,#0d3d20,#27ae60)}
+.card-img-ph.alquds{background:linear-gradient(145deg,#2a0000,#500000)}
+.card-img-ph.almasirah{background:linear-gradient(145deg,#4a3600,#b7950b)}
 .card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 45%,rgba(0,0,0,.05) 100%);transition:background .35s}
 .card:hover .card-overlay{background:linear-gradient(to top,rgba(0,0,0,.97) 0%,rgba(0,0,0,.65) 50%,rgba(0,0,0,.1) 100%)}
 .card-body{position:relative;z-index:1;padding:16px;flex:1;display:flex;flex-direction:column;justify-content:flex-end;min-height:280px}
 .card-src{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;margin-bottom:8px;width:fit-content;letter-spacing:.4px;backdrop-filter:blur(4px)}
-.card-src.alalam{background:rgba(192,57,43,.85);color:#fff}
-.card-src.almayadeen{background:rgba(26,82,118,.85);color:#fff}
-.card-src.almanar{background:rgba(30,132,73,.85);color:#fff}
-.card-src.almasirah{background:rgba(183,149,11,.85);color:#fff}
-.card-src.aletejah{background:rgba(142,68,173,.85);color:#fff}
-.card-src.alahad{background:rgba(211,84,0,.85);color:#fff}
-.card-src.alkawthar{background:rgba(26,140,219,.85);color:#fff}
+.card-src.aljazeera{background:rgba(0,119,68,.85);color:#fff}
+.card-src.bbc{background:rgba(187,0,0,.85);color:#fff}
+.card-src.skynews{background:rgba(0,100,180,.85);color:#fff}
+.card-src.rt{background:rgba(30,30,30,.9);color:#fff}
+.card-src.france24{background:rgba(0,56,168,.85);color:#fff}
+.card-src.aawsat{background:rgba(100,20,20,.85);color:#fff}
 .card-src.arabi21{background:rgba(39,174,96,.85);color:#fff}
+.card-src.alquds{background:rgba(80,0,0,.85);color:#fff}
+.card-src.almasirah{background:rgba(183,149,11,.85);color:#fff}
 .card-title{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:6px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .card-title a{color:#fff}
 .card-title a:hover{color:#93c5fd;text-decoration:none}
@@ -101,14 +103,15 @@ header h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:8px
 .card-ftr a:hover{color:#93c5fd;text-decoration:none}
 .card-sources{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
 .card-src-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;backdrop-filter:blur(4px);letter-spacing:.3px}
-.card-src-badge.alalam{background:rgba(192,57,43,.85);color:#fff}
-.card-src-badge.almayadeen{background:rgba(26,82,118,.85);color:#fff}
-.card-src-badge.almanar{background:rgba(30,132,73,.85);color:#fff}
-.card-src-badge.almasirah{background:rgba(183,149,11,.85);color:#fff}
-.card-src-badge.aletejah{background:rgba(142,68,173,.85);color:#fff}
-.card-src-badge.alahad{background:rgba(211,84,0,.85);color:#fff}
-.card-src-badge.alkawthar{background:rgba(26,140,219,.85);color:#fff}
+.card-src-badge.aljazeera{background:rgba(0,119,68,.85);color:#fff}
+.card-src-badge.bbc{background:rgba(187,0,0,.85);color:#fff}
+.card-src-badge.skynews{background:rgba(0,100,180,.85);color:#fff}
+.card-src-badge.rt{background:rgba(30,30,30,.9);color:#fff}
+.card-src-badge.france24{background:rgba(0,56,168,.85);color:#fff}
+.card-src-badge.aawsat{background:rgba(100,20,20,.85);color:#fff}
 .card-src-badge.arabi21{background:rgba(39,174,96,.85);color:#fff}
+.card-src-badge.alquds{background:rgba(80,0,0,.85);color:#fff}
+.card-src-badge.almasirah{background:rgba(183,149,11,.85);color:#fff}
 .card-multi-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .card-multi-links a{font-size:11px;color:rgba(255,255,255,.65);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:2px 9px;border-radius:5px;transition:all .2s;text-decoration:none}
 .card-multi-links a:hover{background:rgba(255,255,255,.18);color:#fff}
@@ -256,14 +259,15 @@ footer .contact a{color:var(--accent)}
 <div class="toast" id="toast"><span class="toast-icon">&#x2139;</span><span id="toastMsg"></span></div>
 <script>
 var S=[
-{id:"almasirah",name:"المسيرة",type:"rss",url:"https://almasirah.net.ye/feed/rss"},
-{id:"alalam",name:"العالم",type:"tg",channel:"alalamarabic"},
-{id:"almayadeen",name:"الميادين",type:"tg",channel:"almayadeen"},
-{id:"almanar",name:"المنار",type:"tg",channel:"almanarnews"},
-{id:"aletejah",name:"الاتجاه",type:"tg",channel:"Aletejahchanal"},
-{id:"alahad",name:"العهد",type:"tg",channel:"alahadtvofficial"},
-{id:"alkawthar",name:"الكوثر",type:"tg",channel:"alkawthartv"},
-{id:"arabi21",name:"عربي21",type:"tg",channel:"arabi21news"}
+{id:"aljazeera",  name:"الجزيرة",    type:"rss", url:"https://www.aljazeera.net/rss"},
+{id:"bbc",        name:"BBC عربي",   type:"rss", url:"https://www.bbc.com/arabic/index.xml"},
+{id:"skynews",    name:"سكاي نيوز",  type:"rss", url:"https://www.skynewsarabia.com/rss.xml"},
+{id:"rt",         name:"RT عربي",    type:"rss", url:"https://arabic.rt.com/rss/"},
+{id:"france24",   name:"فرانس24",    type:"rss", url:"https://www.france24.com/ar/rss"},
+{id:"aawsat",     name:"الشرق الأوسط",type:"rss",url:"https://aawsat.com/feed"},
+{id:"arabi21",    name:"عربي21",     type:"rss", url:"https://arabi21.com/feed"},
+{id:"alquds",     name:"القدس العربي",type:"rss", url:"https://www.alquds.co.uk/feed"},
+{id:"almasirah",  name:"المسيرة",    type:"rss", url:"https://almasirah.net.ye/feed/rss"}
 ];
 var CT=300000,RI=600000,allNews=[],displayNews=[],af="all",rt=null,PAGE_SIZE=18,curPage=0,isLoadingMore=false,scrollObserver=null;
 
@@ -306,16 +310,10 @@ function deduplicateNews(items){
 /* ===== نهاية خوارزمية منع التكرار ===== */
 function esc(t){if(!t)return"";var d=document.createElement("div");d.textContent=t;return d.innerHTML}
 function ta(d){if(!d)return"";var t=new Date(d);if(isNaN(t))return"";var n=Date.now()-t,m=Math.floor(n/60000);if(m<1)return"الآن";if(m<60)return"منذ "+m+" د"+(m>1?"ق":"");var h=Math.floor(m/60);if(h<24)return"منذ "+h+" س"+(h>1?"ة":"");var q=Math.floor(h/24);if(q<7)return"منذ "+q+" ي"+(q>1?"وم":"");return t.toLocaleDateString("ar-SA",{month:"short",day:"numeric"})}
-async function fetchTelegram(ch){var k="tg_"+ch,c=localStorage.getItem(k);if(c){try{var d=JSON.parse(c);if(Date.now()-d.ts<CT)return d.items}catch(e){}}
-var url="https://api.allorigins.win/raw?url="+encodeURIComponent("https://t.me/s/"+ch);var r=await fetch(url,{signal:AbortSignal.timeout(15000)})
-if(!r.ok)throw new Error("HTTP "+r.status)
-var h=await r.text();var p=new DOMParser();var doc=p.parseFromString(h,"text/html");var msgs=doc.querySelectorAll(".tgme_widget_message_wrap")
-var items=Array.from(msgs).slice(0,20).map(function(m){var te=m.querySelector(".tgme_widget_message_text");var li=m.querySelector(".tgme_widget_message_date a");var ti=m.querySelector(".tgme_widget_message_date time");var txt=te?te.textContent.trim():"";return{title:txt.substring(0,120),desc:txt.substring(0,250),link:li?"https://t.me/s/"+ch+li.getAttribute("href"):"https://t.me/s/"+ch,pubDate:ti?ti.getAttribute("datetime"):""}}).filter(function(i){return i.title.length>10})
-localStorage.setItem(k,JSON.stringify({ts:Date.now(),items:items}));return items}
 function ut(){var mq=document.getElementById("newsTickerMarquee");if(!mq)return
 if(!allNews.length){mq.innerHTML='<span class="t-item">جاري تحميل الأخبار العاجلة...</span>';return}
 mq.innerHTML=allNews.slice(0,20).map(function(n){var src=n.sName||"";return'<span class="t-item"><span class="t-src">'+src+'</span><a href="'+n.link+'" target="_blank" rel="noopener">'+esc(n.title)+'</a></span>'}).join("")}
-async function fr(s){if(s.type==="tg")return await fetchTelegram(s.channel)
+async function fr(s){
 var k="n_"+btoa(s.url),c=localStorage.getItem(k);if(c){try{var d=JSON.parse(c);if(Date.now()-d.ts<CT)return d.items}catch(e){}}
 var r=await fetch("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(s.url),{signal:AbortSignal.timeout(12000)})
 if(!r.ok)throw new Error("HTTP "+r.status)
