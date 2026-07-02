@@ -125,6 +125,13 @@ header h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:8px
 #loadMoreSentinel .lm-spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;display:none}
 #loadMoreSentinel.loading .lm-spinner{display:block}
 #loadMoreSentinel .lm-txt{opacity:.6}
+/* === Skeleton === */
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton{border-radius:var(--radius);overflow:hidden;min-height:280px;background:var(--card-bg);box-shadow:var(--shadow)}
+.skeleton-img{width:100%;height:100%;background:linear-gradient(90deg,var(--border) 25%,color-mix(in srgb,var(--border) 60%,var(--card-bg)) 50%,var(--border) 75%);background-size:200% 100%;animation:shimmer 1.4s ease-in-out infinite}
+/* === شريط التحديث === */
+#refreshBar{position:fixed;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),#6aafff,var(--accent));background-size:200%;animation:prg 1.2s linear infinite;display:none;z-index:300}
+#refreshBar.show{display:block}
 
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--card-bg);color:var(--text);padding:12px 24px;border-radius:10px;box-shadow:0 6px 28px rgba(0,0,0,.2);border:1px solid var(--border);transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:200;font-size:13px;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px}
 .toast.show{transform:translateX(-50%) translateY(0)}
@@ -257,6 +264,7 @@ footer .contact a{color:var(--accent)}
   </div>
 </footer>
 <div class="toast" id="toast"><span class="toast-icon">&#x2139;</span><span id="toastMsg"></span></div>
+<div id="refreshBar"></div>
 <script>
 var S=[
 {id:"aljazeera",  name:"الجزيرة",    type:"rss", url:"https://www.aljazeera.net/rss"},
@@ -360,21 +368,63 @@ var html='<button class="filter-btn'+(af==="all"?" active":"")+'" data-f="all">'
 ids.forEach(function(id){var cnt=allNews.filter(function(n){return n.sId===id}).length;html+='<button class="filter-btn'+(af===id?" active":"")+'" data-f="'+id+'">'+m[id]+' ('+cnt+')</button>'})
 c.innerHTML=html;c.querySelectorAll(".filter-btn").forEach(function(b){b.addEventListener("click",function(){c.querySelectorAll(".filter-btn").forEach(function(x){x.classList.remove("active")});this.classList.add("active");af=this.dataset.f;window.scrollTo({top:0,behavior:"smooth"});rn()})})}
 function stm(m){var t=document.getElementById("toast"),msg=document.getElementById("toastMsg");msg.textContent=m;t.classList.remove("show");void t.offsetWidth;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},3500)}
-async function fan(){var ld=document.getElementById("loading"),gr=document.getElementById("newsGrid"),er=document.getElementById("errorMsg"),sent=document.getElementById("loadMoreSentinel")
-ld.classList.add("active");gr.innerHTML='<div class="err" style="padding:40px"><p style="opacity:.5">جاري التحميل...</p></div>';er.style.display="none";sent.style.display="none";if(scrollObserver)scrollObserver.disconnect()
-try{var rs=await Promise.allSettled(S.map(function(s){return fr(s)}));allNews=[]
-rs.forEach(function(r,i){if(r.status==="fulfilled"){r.value.forEach(function(it){allNews.push(Object.assign({},it,{sId:S[i].id,sName:S[i].name}))})}})
-allNews.sort(function(a,b){return new Date(b.pubDate||0)-new Date(a.pubDate||0)})
-if(!allNews.length){er.style.display="block";document.getElementById("errorDetail").textContent="جميع المصادر غير متوفرة";ld.classList.remove("active");return}
-/* تطبيق خوارزمية الدمج */
-displayNews=deduplicateNews(allNews);
-var saved=allNews.length-displayNews.length;
-rf();rn();ut();document.getElementById("lastUpdate").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"})
-var fl=rs.filter(function(r){return r.status==="rejected"}).length;
-var msg=saved>0?"تم التحديث. تم دمج "+saved+" خبر متكرر":"تم تحديث الأخبار";
-stm(fl?msg+". "+fl+" مصدر غير متوفر":msg)
-if(rt)clearTimeout(rt);rt=setTimeout(fan,RI)}catch(e){er.style.display="block";document.getElementById("errorDetail").textContent=e.message}
-ld.classList.remove("active")}
+function showSkeletons(){var g=document.getElementById("newsGrid");g.innerHTML=Array(6).fill('<div class="skeleton"><div class="skeleton-img"></div></div>').join("")}
+function rebuildDisplay(silent){
+  allNews.sort(function(a,b){return new Date(b.pubDate||0)-new Date(a.pubDate||0)});
+  displayNews=deduplicateNews(allNews);
+  rf();rn();ut();
+  document.getElementById("lastUpdate").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"});
+}
+async function fan(){
+  var gr=document.getElementById("newsGrid"),er=document.getElementById("errorMsg"),sent=document.getElementById("loadMoreSentinel"),rb=document.getElementById("refreshBar");
+  er.style.display="none";sent.style.display="none";if(scrollObserver)scrollObserver.disconnect();
+
+  /* 1. عرض الـ cache فوراً إن وُجد */
+  var cachedNews=[];
+  S.forEach(function(s){
+    var k="n_"+btoa(s.url),c=localStorage.getItem(k);
+    if(c){try{var d=JSON.parse(c);if(d.items&&d.items.length){d.items.forEach(function(it){cachedNews.push(Object.assign({},it,{sId:s.id,sName:s.name}))})}}catch(e){}}
+  });
+  if(cachedNews.length){
+    allNews=cachedNews;
+    rebuildDisplay(true);
+    rb.classList.add("show"); /* شريط تحديث رفيع في الأسفل */
+  }else{
+    showSkeletons(); /* أول زيارة: skeleton */
+  }
+
+  /* 2. جلب كل المصادر بالتوازي مع عرض فوري لأول مصدر يُستجاب */
+  var freshNews=[],settled=0,firstRendered=false;
+  try{
+    var promises=S.map(function(s,i){
+      return fr(s).then(function(items){
+        items.forEach(function(it){freshNews.push(Object.assign({},it,{sId:s.id,sName:s.name}))});
+        settled++;
+        /* عرض فوري بمجرد وصول أول مصدرين */
+        if(!firstRendered&&settled>=2){
+          firstRendered=true;
+          allNews=freshNews.slice();
+          rebuildDisplay(true);
+        }
+      }).catch(function(){settled++;});
+    });
+    await Promise.allSettled(promises);
+
+    /* 3. العرض النهائي بكل المصادر + dedup كاملة */
+    if(freshNews.length){
+      allNews=freshNews;
+      rebuildDisplay(false);
+      var saved=allNews.length-displayNews.length;
+      var msg=saved>0?"تم التحديث - تم دمج "+saved+" خبر مكرر":"تم تحديث الأخبار";
+      stm(msg);
+    }else if(!cachedNews.length){
+      er.style.display="block";document.getElementById("errorDetail").textContent="جميع المصادر غير متوفرة";
+    }
+  }catch(e){if(!cachedNews.length){er.style.display="block";document.getElementById("errorDetail").textContent=e.message}}
+  rb.classList.remove("show");
+  document.getElementById("loading").classList.remove("active");
+  if(rt)clearTimeout(rt);rt=setTimeout(fan,RI);
+}
 var G={"الداخلية":["نزوى","بهلا","منح","إزكي","سمائل","الحمراء","بدبد","ضنك"],"الظاهرة":["عبري","ينقل"],"شمال الباطنة":["صحار","شناص","لوى","صحم","الخابورة","السويق"],"جنوب الباطنة":["الرستاق","العوابي","نخل","وادي المعاول","المصنعة","بركاء"],"مسقط":["مسقط","مطرح","بوشر","السيب","قريات","العامرات"],"شمال الشرقية":["إبراء","المضيبي","القابل","وادي بني خالد"],"جنوب الشرقية":["صور","الكامل والوافي","جعلان بني بو علي","جعلان بني بو حسن"],"الوسطى":["هيماء","محوت","الدقم","الجازر"],"ظفار":["صلالة","طاقة","مرباط","سدح","رخيوت","ضلكوت","مقشن","ثمريت"],"مسندم":["خصب","بخا","دبا","مدحاء"]}
 var CM={"نزوى":"Nizwa","بهلا":"Bahla","منح":"Manah","إزكي":"Izki","سمائل":"Samail","الحمراء":"Al Hamra","بدبد":"Bidbid","ضنك":"Dhank","عبري":"Ibri","ينقل":"Yanqul","صحار":"Sohar","شناص":"Shinas","لوى":"Liwa","صحم":"Saham","الخابورة":"Al Khaburah","السويق":"As Suwayq","الرستاق":"Rustaq","العوابي":"Al Awabi","نخل":"Nakhal","وادي المعاول":"Wadi Al Maawil","المصنعة":"Al Musannah","بركاء":"Barka","مسقط":"Muscat","مطرح":"Muttrah","بوشر":"Bawshar","السيب":"As Seeb","قريات":"Qurayyat","العامرات":"Al Amerat","إبراء":"Ibra","المضيبي":"Al Mudhaibi","القابل":"Al Qabil","وادي بني خالد":"Wadi Bani Khalid","صور":"Sur","الكامل والوافي":"Al Kamil Wal Wafi","جعلان بني بو علي":"Jalan Bani Bu Ali","جعلان بني بو حسن":"Jalan Bani Bu Hasan","هيماء":"Haima","محوت":"Mahut","الدقم":"Duqm","الجازر":"Al Jazir","صلالة":"Salalah","طاقة":"Taqah","مرباط":"Mirbat","سدح":"Sadah","رخيوت":"Rakhyut","ضلكوت":"Dalkut","مقشن":"Mughsail","ثمريت":"Thumrait","خصب":"Khasab","بخا":"Bukha","دبا":"Diba","مدحاء":"Madha"}
 var WC=document.getElementById("citySelector"),sc="نزوى"
