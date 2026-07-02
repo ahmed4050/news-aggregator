@@ -340,16 +340,16 @@ function ut(){
   var html=allNews.slice(0,20).map(function(n){
     return'<span class="t-item"><span class="t-src">'+esc(n.sName||"")+'</span><a href="'+n.link+'" target="_blank" rel="noopener">'+esc(n.title)+'</a></span>'
   }).join("");
-  /* نكرر المحتوى مرتين: عند انتهاء النسخة الأولى تبدأ الثانية بلا انقطاع */
-  inner.className="ticker-inner";
-  inner.style.animation="none";
+  /* إيقاف الـ animation، تعبئة المحتوى، إعادة التشغيل */
+  inner.classList.remove("running");
+  inner.style.animationName="none";
   inner.innerHTML=html+html;
-  /* احسب السرعة: 80px لكل ثانية */
   void inner.offsetWidth;
   var totalW=inner.scrollWidth;
   var dur=Math.round((totalW/2)/80)+"s";
+  inner.style.animationName="";
   inner.style.animationDuration=dur;
-  inner.className="ticker-inner running";
+  inner.classList.add("running");
 }
 async function fr(s){
 var k="n_"+btoa(s.url),c=localStorage.getItem(k);if(c){try{var d=JSON.parse(c);if(Date.now()-d.ts<CT)return d.items}catch(e){}}
