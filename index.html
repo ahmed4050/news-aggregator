@@ -194,6 +194,13 @@ header h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:8px
 footer{text-align:center;padding:20px;color:var(--text2);font-size:14px;border-top:1px solid var(--border);margin-top:20px}
 footer .contact{margin-top:6px;font-size:13px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
 footer .contact a{color:var(--accent)}
+.visit-counter{display:inline-flex;align-items:center;gap:10px;background:var(--card-bg);border:1px solid var(--border);border-radius:40px;padding:6px 18px;margin-top:12px;box-shadow:var(--shadow);font-size:13px}
+.visit-counter .vc-icon{font-size:18px;line-height:1}
+.visit-counter .vc-label{color:var(--text2)}
+.visit-counter .vc-num{font-size:17px;font-weight:800;color:var(--accent);min-width:40px;display:inline-block;transition:all .4s}
+.visit-counter.loading .vc-num{opacity:.3}
+@keyframes vcPop{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+.visit-counter .vc-num.pop{animation:vcPop .4s ease}
 </style>
 </head>
 <body><header>
@@ -263,6 +270,13 @@ footer .contact a{color:var(--accent)}
     <span>&#x1F464; أحمد القصابي</span>
     <a href="tel:99848382">&#x1F4DE; 99848382</a>
     <a href="mailto:ahmed4050@gmail.com">&#x2709; ahmed4050@gmail.com</a>
+  </div>
+  <div>
+    <div class="visit-counter loading" id="visitCounter">
+      <span class="vc-icon">&#x1F441;&#xFE0F;</span>
+      <span class="vc-label">عدد الزيارات</span>
+      <span class="vc-num" id="vcNum">...</span>
+    </div>
   </div>
 </footer>
 <div class="toast" id="toast"><span class="toast-icon">&#x2139;</span><span id="toastMsg"></span></div>
@@ -499,6 +513,30 @@ document.getElementById("refreshBtn").addEventListener("click",fan)
 document.getElementById("themeToggle").addEventListener("click",tt)
 pc();fan();fw(sc)
 setInterval(function(){if(!document.getElementById("weatherSection").classList.contains("hidden"))fw(sc)},600000)
+/* ===== عداد الزيارات ===== */
+function fmtNum(n){if(n>=1000000)return(n/1000000).toFixed(1).replace(/\.0$/,"")+"م";if(n>=1000)return(n/1000).toFixed(1).replace(/\.0$/,"")+"ك";return n.toLocaleString("ar-EG")}
+async function loadVisitCounter(){
+  var box=document.getElementById("visitCounter"),num=document.getElementById("vcNum");
+  /* عرض القيمة المحفوظة محلياً أولاً لسرعة الظهور */
+  var cached=localStorage.getItem("vc_last");
+  if(cached){num.textContent=fmtNum(parseInt(cached)||0);box.classList.remove("loading")}
+  try{
+    var r=await fetch("https://api.counterapi.dev/v1/news-aggregator-oman/visits/up",{signal:AbortSignal.timeout(8000)});
+    if(!r.ok)throw new Error();
+    var d=await r.json();
+    var count=d.count||0;
+    localStorage.setItem("vc_last",count);
+    var old=parseInt(num.textContent.replace(/[^\d]/g,""))||0;
+    num.textContent=fmtNum(count);
+    box.classList.remove("loading");
+    /* تأثير pop إذا تغير الرقم */
+    if(count!==old){num.classList.remove("pop");void num.offsetWidth;num.classList.add("pop")}
+  }catch(e){
+    if(!cached){num.textContent="--";box.classList.remove("loading")}
+  }
+}
+loadVisitCounter();
+/* ===== نهاية عداد الزيارات ===== */
 </script>
 </body>
 </html>
