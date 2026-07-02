@@ -105,14 +105,14 @@ header h1{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px
 .ticker-bar{background:var(--header-bg);border-bottom:2px solid var(--accent);padding:6px 0;overflow:hidden;position:relative;display:flex;align-items:center}
 .ticker-bar .ticker-label{background:var(--accent);color:#fff;font-weight:700;font-size:12px;padding:4px 14px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:4px;margin:0;border-radius:0;position:relative;z-index:2}
 .ticker-bar .ticker-track{flex:1;overflow:hidden;padding:0 16px;position:relative}
-.ticker-bar .ticker-slide{display:flex;white-space:nowrap;animation:tickerScroll 40s linear infinite;width:max-content}
+.ticker-bar .ticker-slide{display:flex;white-space:nowrap;animation:tickerScroll 70s linear infinite;width:max-content}
 .ticker-bar .ticker-slide:hover{animation-play-state:paused}
 .ticker-bar .ticker-item{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--header-text);padding:0 24px;border-left:1px solid rgba(255,255,255,.15)}
 .ticker-bar .ticker-item:last-child{border-left:none}
 .ticker-bar .ticker-item .ticker-src{font-size:10px;background:rgba(255,255,255,.15);padding:1px 8px;border-radius:4px;flex-shrink:0}
 .ticker-bar .ticker-item a{color:#7dd3fc;text-decoration:none}
 .ticker-bar .ticker-item a:hover{text-decoration:underline;color:#bae6fd}
-@keyframes tickerScroll{0%{transform:translate3d(100%,0,0)}100%{transform:translate3d(-100%,0,0)}}
+@keyframes tickerScroll{0%{transform:translate3d(-100%,0,0)}100%{transform:translate3d(100%,0,0)}}
 footer{text-align:center;padding:20px;color:var(--text-secondary);font-size:13px;border-top:1px solid var(--border);margin-top:20px}
 footer .contact-info{margin-top:6px;font-size:12px}
 </style>
