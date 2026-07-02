@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>موجز الأخبار والطقس</title>
+<style>
+:root {
+  --bg: #f0f2f5; --card-bg: #fff; --text: #1a1a2e; --text-secondary: #555;
+  --border: #e0e0e0; --accent: #1a73e8; --accent-hover: #1557b0;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08); --radius: 12px;
+  --header-bg: #1a1a2e; --header-text: #fff; --tag-bg: #e8f0fe; --spinner: #1a73e8;
+  --alert-bg: #fff3e0; --alert-border: #ff9800; --alert-text: #e65100;
+  --weather-bg: linear-gradient(145deg, #0b1a33, #1d3b6e, #2b5a9e);
+}
+[data-theme="dark"] {
+  --bg: #0f0f1a; --card-bg: #1a1a2e; --text: #e0e0e0; --text-secondary: #aaa;
+  --border: #2a2a3e; --accent: #4a9eff; --accent-hover: #6aafff;
+  --header-bg: #0a0a14; --header-text: #e0e0e0; --tag-bg: #1a2a4e; --spinner: #4a9eff;
+  --alert-bg: #3a2a00; --alert-text: #ffb74d;
+  --weather-bg: linear-gradient(145deg, #060d1a, #0f1f3a, #142b4e);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Naskh Arabic","Cairo",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+header{background:var(--header-bg);color:var(--header-text);padding:12px 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+header h1{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.08);border-radius:10px;padding:3px}
+.tab-btn{background:none;border:none;color:rgba(255,255,255,.6);padding:6px 16px;border-radius:8px;cursor:pointer;font-size:14px;font-family:inherit;transition:all .2s}
+.tab-btn:hover{color:#fff;background:rgba(255,255,255,.1)}
+.tab-btn.active{background:rgba(255,255,255,.2);color:#fff}
+.header-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.last-update{font-size:12px;color:#aaa}
+.btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit}
+.btn:hover{background:rgba(255,255,255,.2)}
+.btn-icon{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px;line-height:1}
+.hidden{display:none!important}
+.section{max-width:1200px;margin:0 auto;padding:20px 16px}
+.loading{text-align:center;padding:40px}
+.spinner{width:36px;height:36px;border:4px solid var(--border);border-top-color:var(--spinner);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filter-btn{background:var(--card-bg);border:1px solid var(--border);color:var(--text);padding:6px 16px;border-radius:20px;cursor:pointer;font-size:13px;font-family:inherit}
+.filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.news-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:640px){.news-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.news-grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:transform .2s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-2px)}
+.card-img{width:100%;height:170px;object-fit:cover;background:var(--border)}
+.card-img-ph{width:100%;height:170px;background:linear-gradient(135deg,var(--accent),#6aafff);display:flex;align-items:center;justify-content:center;font-size:36px;opacity:.6}
+.card-body{padding:14px;flex:1;display:flex;flex-direction:column}
+.card-src{display:inline-block;font-size:11px;font-weight:600;padding:2px 10px;border-radius:12px;margin-bottom:6px;width:fit-content}
+.card-src.bbc{background:#dc143c;color:#fff}
+.card-src.skynews{background:#0055a5;color:#fff}
+.card-src.cnn{background:#cc0000;color:#fff}
+.card-title{font-size:15px;font-weight:600;line-height:1.5;margin-bottom:6px;flex:1}
+.card-title a{color:var(--text)}
+.card-title a:hover{color:var(--accent)}
+.card-desc{font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-ftr{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-secondary);border-top:1px solid var(--border);padding-top:10px;margin-top:auto}
+.error-msg{text-align:center;padding:30px 20px;color:var(--text-secondary)}
+.error-msg p{margin-bottom:8px}
+.retry-btn{background:var(--accent);color:#fff;border:none;padding:8px 24px;border-radius:8px;cursor:pointer;font-size:14px;font-family:inherit}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card-bg);color:var(--text);padding:10px 22px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.2);border:1px solid var(--border);transition:transform .3s;z-index:200;font-size:13px}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.alert-banner{background:var(--alert-bg);border:1px solid var(--alert-border);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:none;align-items:center;gap:12px}
+.alert-banner.show{display:flex}
+.alert-banner .alert-icon{font-size:28px;flex-shrink:0}
+.alert-banner .alert-text{flex:1}
+.alert-banner .alert-text h3{font-size:15px;color:var(--alert-text);margin-bottom:4px}
+.alert-banner .alert-text p{font-size:13px;color:var(--text-secondary)}
+.weather-wrap{background:var(--weather-bg);border-radius:20px;padding:20px;color:#fff;position:relative;overflow:hidden}
+.weather-wrap::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(56,189,248,.08) 0%,transparent 60%);pointer-events:none}
+.weather-sel{margin-bottom:16px;position:relative;z-index:1}
+.weather-sel select{width:100%;background:rgba(15,23,42,.6);border:1px solid rgba(255,255,255,.15);border-radius:2rem;padding:10px 16px;color:#f1f5f9;font-size:15px;font-family:inherit;cursor:pointer;outline:none;appearance:none}
+.weather-sel select option,.weather-sel select optgroup{background:#1e293b;color:#f1f5f9}
+.weather-sel select optgroup{color:#bae6fd;font-weight:600}
+.weather-card{text-align:center;position:relative;z-index:1}
+.weather-city{font-size:24px;font-weight:600;background:linear-gradient(to left,#f0f9ff,#bae6fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+.weather-sub{font-size:14px;opacity:.75;margin-bottom:8px}
+.weather-temp{font-size:64px;font-weight:700;line-height:1;background:linear-gradient(135deg,#fff 60%,#94c5f0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.weather-temp-unit{font-size:28px;font-weight:300;opacity:.8}
+.weather-desc{font-size:18px;margin:8px 0 16px;display:flex;align-items:center;justify-content:center;gap:8px}
+.weather-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12)}
+.weather-detail{background:rgba(255,255,255,.06);border-radius:12px;padding:8px 4px}
+.weather-detail .lbl{font-size:10px;text-transform:uppercase;opacity:.6}
+.weather-detail .val{font-size:16px;font-weight:600;margin-top:4px}
+.weather-detail .val small{font-size:11px;font-weight:300;opacity:.7}
+.ticker-wrap{background:rgba(15,23,42,.75);backdrop-filter:blur(16px);border-radius:2rem;padding:8px 8px 8px 0;border:1px solid rgba(56,189,248,.2);display:flex;align-items:center;overflow:hidden;margin-top:16px;min-height:48px}
+.ticker-lbl{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#0f172a;font-weight:700;font-size:12px;padding:6px 14px;border-radius:2rem 0 0 2rem;white-space:nowrap;flex-shrink:0;margin-left:8px;display:flex;align-items:center;gap:4px}
+.ticker-track{flex:1;overflow:hidden}
+.ticker-content{display:flex;white-space:nowrap;animation:marquee 32s linear infinite;font-size:13px;color:#e2e8f0;gap:2rem;padding-right:1rem}
+.ticker-content .item{display:inline-flex;align-items:center;gap:4px}
+.ticker-content .item strong{color:#7dd3fc;font-weight:600}
+@keyframes marquee{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(100%,0,0)}}
+.forecast{display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:8px;margin-top:16px}
+.forecast-day{background:rgba(255,255,255,.06);border-radius:12px;padding:10px 4px;text-align:center}
+.forecast-day .day-name{font-size:12px;opacity:.7}
+.forecast-day .day-icon{font-size:20px;margin:4px 0}
+.forecast-day .day-temp{font-size:14px;font-weight:600}
+footer{text-align:center;padding:20px;color:var(--text-secondary);font-size:13px;border-top:1px solid var(--border);margin-top:20px}
+footer .contact-info{margin-top:6px;font-size:12px}
+</style>
+</head>
+<body><header>
+  <div class="header-inner">
+    <h1>&#x1F4F0; موجز الأخبار والطقس</h1>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="news">&#x1F4F0; الأخبار</button>
+      <button class="tab-btn" data-tab="weather">&#x26C5; الطقس</button>
+    </div>
+    <div class="header-controls">
+      <span class="last-update" id="lastUpdate"></span>
+      <button class="btn" id="refreshBtn">&#x21BB;</button>
+      <button class="btn-icon" id="themeToggle">&#x1F319;</button>
+    </div>
+  </div>
+</header>
+<div id="newsSection" class="section">
+  <div class="filters" id="filters"></div>
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>جاري تحميل الأخبار...</p>
+  </div>
+  <div class="news-grid" id="newsGrid"></div>
+  <div class="error-msg" id="errorMsg" style="display:none;">
+    <p>&#x26A0;&#xFE0F; تعذر تحميل الأخبار</p>
+    <p id="errorDetail"></p>
+    <button class="retry-btn" onclick="fetchAllNews()">إعادة المحاولة</button>
+  </div>
+</div>
+<div id="weatherSection" class="section hidden">
+  <div class="alert-banner" id="alertBanner">
+    <div class="alert-icon">&#x26A0;&#xFE0F;</div>
+    <div class="alert-text">
+      <h3 id="alertTitle">تنبيه جوي</h3>
+      <p id="alertBody">جاري التحقق من التنبيهات...</p>
+    </div>
+  </div>
+  <div class="weather-wrap">
+    <div class="weather-sel">
+      <select id="citySelector"><option value="">-- اختر الولاية --</option></select>
+    </div>
+    <div class="weather-card">
+      <div class="weather-city" id="cityName">نزوى</div>
+      <div class="weather-sub" id="govName">محافظة الداخلية - سلطنة عُمان</div>
+      <div id="weatherContent">
+        <div style="padding:20px 0;"><div class="spinner"></div><p style="opacity:0.7;">جاري تحميل الطقس...</p></div>
+      </div>
+      <div class="ticker-wrap">
+        <div class="ticker-lbl">&#x23F3; توقعات</div>
+        <div class="ticker-track">
+          <div class="ticker-content" id="tickerContent"><span class="item">جاري تحميل التوقعات...</span></div>
+        </div>
+      </div>
+      <div class="forecast" id="forecast"></div>
+    </div>
+  </div>
+</div>
+<footer>
+  <div>&#x1F4F0; موجز الأخبار والطقس - جميع الحقوق محفوظة للمصادر</div>
+  <div class="contact-info">
+    للاستفسار: أحمد القصابي |
+    <a href="tel:99848382">99848382</a> |
+    <a href="mailto:ahmed4050@gmail.com">ahmed4050@gmail.com</a>
+  </div>
+</footer>
+<div class="toast" id="toast"></div><script>
+var S=[
+{id:"bbc",name:"BBC Arabic",url:"https://feeds.bbci.co.uk/arabic/rss.xml"},
+{id:"skynews",name:"سكاي نيوز",url:"https://www.skynewsarabia.com/rss"},
+{id:"cnn",name:"CNN Arabic",url:"http://arabic.cnn.com/World/rss"}
+];
+var CT=300000,RI=600000,allNews=[],af="all",rt=null;
+function esc(t){if(!t)return"";var d=document.createElement("div");d.textContent=t;return d.innerHTML}
+function ta(d){if(!d)return"";var t=new Date(d);if(isNaN(t))return"";var n=Date.now()-t,m=Math.floor(n/60000);if(m<1)return"الآن";if(m<60)return"منذ "+m+" د"+(m>1?"ق":"");var h=Math.floor(m/60);if(h<24)return"منذ "+h+" س"+(h>1?"ة":"");var q=Math.floor(h/24);if(q<7)return"منذ "+q+" ي"+(q>1?"وم":"");return t.toLocaleDateString("ar-SA",{month:"short",day:"numeric"})}
+async function fr(s){var k="n_"+btoa(s.url),c=localStorage.getItem(k);if(c){try{var d=JSON.parse(c);if(Date.now()-d.ts<CT)return d.items}catch(e){}}
+var r=await fetch("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(s.url),{signal:AbortSignal.timeout(12000)})
+if(!r.ok)throw new Error("HTTP "+r.status)
+var j=await r.json()
+if(j.status!=="ok")throw new Error(j.message||"خطأ")
+var it=(j.items||[]).map(function(i){return{title:i.title||"",desc:(i.description||"").replace(/<[^>]*>/g,"").trim().substring(0,180),link:i.link||"#",pubDate:i.pubDate||"",image:i.enclosure?i.enclosure.link:(i.thumbnail||"")}}).filter(function(i){return i.title.length>5&&i.link!=="#"})
+localStorage.setItem(k,JSON.stringify({ts:Date.now(),items:it}));return it}
+function rn(){var g=document.getElementById("newsGrid"),f=allNews;if(af!=="all")f=allNews.filter(function(n){return n.sId===af})
+if(!f.length){g.innerHTML='<div class="error-msg"><p>&#x1F50D; لا توجد أخبار</p></div>';return}
+g.innerHTML=f.map(function(i){var img=i.image?'<img class="card-img" src="'+i.image+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'<div class="card-img-ph">&#x1F4F0;</div>'
+return'<div class="card">'+img+'<div class="card-body"><span class="card-src '+i.sId+'">'+i.sName+'</span><div class="card-title"><a href="'+i.link+'" target="_blank" rel="noopener">'+esc(i.title)+'</a></div><div class="card-desc">'+esc(i.desc)+'</div><div class="card-ftr"><span>'+ta(i.pubDate)+'</span><a href="'+i.link+'" target="_blank" rel="noopener">اقرأ المزيد</a></div></div></div>'}).join("")}
+function rf(){var c=document.getElementById("filters"),m={};allNews.forEach(function(n){m[n.sId]=n.sName})
+var ids=Object.keys(m),html='<button class="filter-btn'+(af==="all"?" active":"")+'" data-f="all">الكل ('+allNews.length+')</button>'
+ids.forEach(function(id){var cnt=allNews.filter(function(n){return n.sId===id}).length;html+='<button class="filter-btn'+(af===id?" active":"")+'" data-f="'+id+'">'+m[id]+' ('+cnt+')</button>'})
+c.innerHTML=html;c.querySelectorAll(".filter-btn").forEach(function(b){b.addEventListener("click",function(){c.querySelectorAll(".filter-btn").forEach(function(x){x.classList.remove("active")});this.classList.add("active");af=this.dataset.f;rn()})})}
+function st(m){var t=document.getElementById("toast");t.textContent=m;t.classList.remove("show");void t.offsetWidth;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},3000)}
+async function fan(){var ld=document.getElementById("loading"),gr=document.getElementById("newsGrid"),er=document.getElementById("errorMsg")
+ld.classList.add("active");gr.innerHTML="";er.style.display="none"
+try{var rs=await Promise.allSettled(S.map(function(s){return fr(s)}));allNews=[]
+rs.forEach(function(r,i){if(r.status==="fulfilled"){r.value.forEach(function(it){allNews.push(Object.assign({},it,{sId:S[i].id,sName:S[i].name}))})}})
+allNews.sort(function(a,b){return new Date(b.pubDate||0)-new Date(a.pubDate||0)})
+if(!allNews.length){er.style.display="block";document.getElementById("errorDetail").textContent="جميع المصادر غير متوفرة";ld.classList.remove("active");return}
+rf();rn();document.getElementById("lastUpdate").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"})
+var fl=rs.filter(function(r){return r.status==="rejected"}).length;st(fl?"تم التحديث. "+fl+" مصدر غير متوفر":"تم تحديث الأخبار")
+if(rt)clearTimeout(rt);rt=setTimeout(fan,RI)}catch(e){ld.classList.remove("active");er.style.display="block";document.getElementById("errorDetail").textContent=e.message}
+ld.classList.remove("active")}var G={"الداخلية":["نزوى","بهلا","منح","إزكي","سمائل","الحمراء","بدبد","ضنك"],"الظاهرة":["عبري","ينقل"],"شمال الباطنة":["صحار","شناص","لوى","صحم","الخابورة","السويق"],"جنوب الباطنة":["الرستاق","العوابي","نخل","وادي المعاول","المصنعة","بركاء"],"مسقط":["مسقط","مطرح","بوشر","السيب","قريات","العامرات"],"شمال الشرقية":["إبراء","المضيبي","القابل","وادي بني خالد"],"جنوب الشرقية":["صور","الكامل والوافي","جعلان بني بو علي","جعلان بني بو حسن"],"الوسطى":["هيماء","محوت","الدقم","الجازر"],"ظفار":["صلالة","طاقة","مرباط","سدح","رخيوت","ضلكوت","مقشن","ثمريت"],"مسندم":["خصب","بخا","دبا","مدحاء"]}
+var CM={"نزوى":"Nizwa","بهلا":"Bahla","منح":"Manah","إزكي":"Izki","سمائل":"Samail","الحمراء":"Al Hamra","بدبد":"Bidbid","ضنك":"Dhank","عبري":"Ibri","ينقل":"Yanqul","صحار":"Sohar","شناص":"Shinas","لوى":"Liwa","صحم":"Saham","الخابورة":"Al Khaburah","السويق":"As Suwayq","الرستاق":"Rustaq","العوابي":"Al Awabi","نخل":"Nakhal","وادي المعاول":"Wadi Al Maawil","المصنعة":"Al Musannah","بركاء":"Barka","مسقط":"Muscat","مطرح":"Muttrah","بوشر":"Bawshar","السيب":"As Seeb","قريات":"Qurayyat","العامرات":"Al Amerat","إبراء":"Ibra","المضيبي":"Al Mudhaibi","القابل":"Al Qabil","وادي بني خالد":"Wadi Bani Khalid","صور":"Sur","الكامل والوافي":"Al Kamil Wal Wafi","جعلان بني بو علي":"Jalan Bani Bu Ali","جعلان بني بو حسن":"Jalan Bani Bu Hasan","هيماء":"Haima","محوت":"Mahut","الدقم":"Duqm","الجازر":"Al Jazir","صلالة":"Salalah","طاقة":"Taqah","مرباط":"Mirbat","سدح":"Sadah","رخيوت":"Rakhyut","ضلكوت":"Dalkut","مقشن":"Mughsail","ثمريت":"Thumrait","خصب":"Khasab","بخا":"Bukha","دبا":"Diba","مدحاء":"Madha"}
+var WC=document.getElementById("citySelector"),sc="نزوى"
+function pc(){WC.innerHTML='<option value="">-- اختر الولاية --</option>'
+var gs=Object.keys(G).sort()
+gs.forEach(function(g){var og=document.createElement("optgroup");og.label=g
+G[g].forEach(function(c){var o=document.createElement("option");o.value=c;o.textContent=c;og.appendChild(o)})
+WC.appendChild(og)})}
+function gc(c){return CM[c]||c||"Muscat"}
+async function fw(city){var wc=document.getElementById("weatherContent"),tk=document.getElementById("tickerContent"),fc=document.getElementById("forecast")
+sc=city;document.getElementById("cityName").textContent=city
+var gn="";for(var g in G){if(G[g].indexOf(city)>=0){gn=g;break}}
+document.getElementById("govName").textContent=gn?"محافظة "+gn+" - سلطنة عُمان":"سلطنة عُمان"
+wc.innerHTML='<div style="padding:20px 0;"><div class="spinner"></div><p style="opacity:0.7;">جاري تحميل طقس '+city+'...</p></div>'
+tk.innerHTML='<span class="item">جاري تحميل التوقعات...</span>';fc.innerHTML=""
+try{var url="https://wttr.in/"+encodeURIComponent(gc(city))+"?format=j1"
+var r=await fetch(url,{signal:AbortSignal.timeout(10000)})
+if(!r.ok)throw new Error("خطأ")
+var d=await r.json(),cc=d.current_condition[0],t=cc.temp_C,h=cc.humidity,w=cc.windspeedKmph,p=cc.pressure,v=cc.visibility,u=cc.uvIndex,de=cc.weatherDesc[0].value
+var wd=d.weather[0],mx=wd.maxtempC,mn=wd.mintempC,hr=wd.hourly[0]||{},cl=hr.cloudcover||"--",rn=hr.chanceofrain||"0",pr=hr.precipMM||"0"
+var tmw=d.weather[1],tmx=tmw?tmw.maxtempC:"--",tmn=tmw?tmw.mintempC:"--"
+var ds=de;if(de.indexOf("Clear")>=0||de.indexOf("Sunny")>=0)ds="مشمس"
+else if(de.indexOf("Partly cloudy")>=0)ds="غائم جزئياً"
+else if(de.indexOf("Cloudy")>=0)ds="غائم"
+else if(de.indexOf("rain")>=0||de.indexOf("Rain")>=0)ds="مطر"
+else if(de.indexOf("Thunder")>=0||de.indexOf("thunder")>=0)ds="عواصف رعدية"
+else if(de.indexOf("Fog")>=0||de.indexOf("Mist")>=0||de.indexOf("fog")>=0)ds="ضباب"
+var icon="&#x2600;&#xFE0F;"
+if(de.indexOf("rain")>=0||de.indexOf("Rain")>=0||de.indexOf("drizzle")>=0)icon="&#x1F327;&#xFE0F;"
+if(de.indexOf("Thunder")>=0||de.indexOf("thunder")>=0)icon="&#x26C8;&#xFE0F;"
+if(de.indexOf("Cloudy")>=0||de.indexOf("Overcast")>=0)icon="&#x2601;&#xFE0F;"
+if(de.indexOf("Partly cloudy")>=0)icon="&#x26C5;"
+if(de.indexOf("Fog")>=0||de.indexOf("Mist")>=0||de.indexOf("fog")>=0)icon="&#x1F32B;&#xFE0F;"
+if(de.indexOf("Clear")>=0||de.indexOf("Sunny")>=0||de.indexOf("sunny")>=0)icon="&#x2600;&#xFE0F;"
+wc.innerHTML='<div class="weather-temp">'+t+'<span class="weather-temp-unit">&deg;م</span></div><div class="weather-desc"><span>'+icon+'</span> '+ds+'</div><div class="weather-details"><div class="weather-detail"><div class="lbl">&#x1F4A7; الرطوبة</div><div class="val">'+h+'<small>%</small></div></div><div class="weather-detail"><div class="lbl">&#x1F32C;&#xFE0F; الرياح</div><div class="val">'+w+'<small> كم/س</small></div></div><div class="weather-detail"><div class="lbl">&#x1F321;&#xFE0F; العظمى/الصغرى</div><div class="val">'+mx+'&deg; / '+mn+'&deg;</div></div><div class="weather-detail"><div class="lbl">&#x1F4CA; الضغط</div><div class="val">'+p+'<small> هـPa</small></div></div><div class="weather-detail"><div class="lbl">&#x1F441;&#xFE0F; الرؤية</div><div class="val">'+v+'<small> كم</small></div></div><div class="weather-detail"><div class="lbl">&#x2600;&#xFE0F; UV</div><div class="val">'+u+'</div></div></div>'
+tk.innerHTML='<span class="item">&#x1F321;&#xFE0F; العظمى اليوم <strong>'+mx+'&deg;</strong> / الصغرى <strong>'+mn+'&deg;</strong></span><span class="item">&#x2601;&#xFE0F; السحب <strong>'+cl+'%</strong></span><span class="item">&#x1F327;&#xFE0F; المطر <strong>'+rn+'%</strong></span><span class="item">&#x1F4C5; غدا: عظمى <strong>'+tmx+'&deg;</strong> صغرى <strong>'+tmn+'&deg;</strong></span><span class="item">&#x1F4A8; الرياح <strong>'+w+'</strong> كم/س</span><span class="item">&#x1F4A7; الرطوبة <strong>'+h+'%</strong></span>'
+var days=["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"]
+var fh=""
+for(var i=0;i<Math.min(d.weather.length,7);i++){var day=d.weather[i],idx=new Date(day.date).getDay(),di="&#x2600;&#xFE0F;"
+var dd=day.hourly[4]||{},dc=dd.weatherDesc?dd.weatherDesc[0].value:""
+if(dc.indexOf("rain")>=0||dc.indexOf("Rain")>=0)di="&#x1F327;&#xFE0F;"
+if(dc.indexOf("Cloudy")>=0||dc.indexOf("Overcast")>=0)di="&#x2601;&#xFE0F;"
+if(dc.indexOf("Partly cloudy")>=0)di="&#x26C5;"
+fh+='<div class="forecast-day"><div class="day-name">'+(i===0?"اليوم":days[idx])+'</div><div class="day-icon">'+di+'</div><div class="day-temp">'+day.maxtempC+'&deg;</div></div>'}
+fc.innerHTML=fh
+cwa(city,de,rn,w)}catch(e){wc.innerHTML='<div class="error-msg" style="padding:1rem;"><p>&#x26A0;&#xFE0F; تعذر تحميل الطقس ل '+city+'</p></div>'
+tk.innerHTML='<span class="item">&#x26A0;&#xFE0F; خطأ في التحميل</span>'}}
+function cwa(city,desc,rn,wn){var b=document.getElementById("alertBanner"),t=document.getElementById("alertTitle"),bd=document.getElementById("alertBody")
+var ri=parseInt(rn)||0,wi=parseInt(wn)||0;b.classList.remove("show")
+if(ri>=80){b.classList.add("show");t.textContent="&#x26A0;&#xFE0F; تحذير: أمطار غزيرة متوقعة في "+city;bd.textContent="نسبة هطول الأمطار: "+ri+"%. يرجى أخذ الحيطة والحذر.";return}
+if(wi>=50){b.classList.add("show");t.textContent="&#x26A0;&#xFE0F; تحذير: رياح قوية في "+city;bd.textContent="سرعة الرياح: "+wi+" كم/س. احتمال وجود منخفض جوي.";return}
+if(desc.indexOf("Thunder")>=0||desc.indexOf("thunder")>=0){b.classList.add("show");t.textContent="&#x26A0;&#xFE0F; تنبيه: عواصف رعدية في "+city;bd.textContent="احتمال عواصف رعدية مصحوبة بأمطار غزيرة."}}
+WC.addEventListener("change",function(){if(this.value)fw(this.value)})
+document.querySelectorAll(".tab-btn").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".tab-btn").forEach(function(x){x.classList.remove("active")});this.classList.add("active")
+var tab=this.dataset.tab;document.getElementById("newsSection").classList.toggle("hidden",tab!=="news");document.getElementById("weatherSection").classList.toggle("hidden",tab!=="weather")
+if(tab==="weather"&&sc)fw(sc)})})
+function tt(){var c=document.documentElement.getAttribute("data-theme"),n=c==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",n);localStorage.setItem("theme",n);document.getElementById("themeToggle").textContent=n==="dark"?"&#x2600;&#xFE0F;":"&#x1F319;"}
+var st=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",st);document.getElementById("themeToggle").textContent=st==="dark"?"&#x2600;&#xFE0F;":"&#x1F319;"
+document.getElementById("refreshBtn").addEventListener("click",fan)
+document.getElementById("themeToggle").addEventListener("click",tt)
+pc();fan();fw(sc)
+setInterval(function(){if(!document.getElementById("weatherSection").classList.contains("hidden"))fw(sc)},600000)
+</script>
+</body>
+</html>
