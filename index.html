@@ -66,6 +66,8 @@ header h1{font-size:24px;font-weight:700;display:flex;align-items:center;gap:8px
 .card-src.bbc{background:#dc143c;color:#fff}
 .card-src.skynews{background:#0055a5;color:#fff}
 .card-src.cnn{background:#cc0000;color:#fff}
+.card-src.telegram{background:#1a8cdb;color:#fff}
+.card-src.telegram::before{content:"✈";margin-left:4px;font-size:11px}
 .card-title{font-size:19px;font-weight:600;line-height:1.6;margin-bottom:8px;flex:1}
 .card-title a{color:var(--text)}
 .card-title a:hover{color:var(--accent)}
@@ -196,7 +198,8 @@ footer .contact-info{margin-top:8px;font-size:14px}
 var S=[
 {id:"bbc",name:"BBC - شرق أوسط",url:"https://feeds.bbci.co.uk/arabic/middleeast/rss.xml"},
 {id:"skynews",name:"سكاي نيوز",url:"https://www.skynewsarabia.com/rss"},
-{id:"cnn",name:"CNN دولي",url:"http://arabic.cnn.com/World/rss"}
+{id:"cnn",name:"CNN دولي",url:"http://arabic.cnn.com/World/rss"},
+{id:"telegram",name:"تليجرام",url:"https://rsshub.app/telegram/channel/Royy_tweets"}
 ];
 var CT=300000,RI=600000,allNews=[],af="all",rt=null;
 function esc(t){if(!t)return"";var d=document.createElement("div");d.textContent=t;return d.innerHTML}
