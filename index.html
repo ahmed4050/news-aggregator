@@ -180,14 +180,16 @@ header h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:8px
 .forecast-day .day-temp{font-size:13px;font-weight:600}
 
 .ticker-bar{background:var(--hdr-bg);border-bottom:2px solid var(--accent);overflow:hidden;display:flex;align-items:stretch;height:36px}
-.ticker-bar .ticker-lbl2{background:var(--accent);color:#fff;font-weight:700;font-size:11px;padding:0 12px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:4px;position:relative;z-index:2}
-.ticker-bar .ticker-trk{flex:1;overflow:hidden;position:relative}
-.ticker-bar .ticker-trk marquee{height:100%;display:flex;align-items:center}
-.ticker-bar .t-item{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--hdr-txt);padding:0 20px;border-left:1px solid rgba(255,255,255,.1);height:100%}
-.ticker-bar .t-item:last-child{border-left:none}
-.ticker-bar .t-item .t-src{font-size:9px;background:rgba(255,255,255,.12);padding:1px 7px;border-radius:3px;flex-shrink:0}
+.ticker-bar .ticker-lbl2{background:var(--accent);color:#fff;font-weight:700;font-size:11px;padding:0 14px;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px;position:relative;z-index:2}
+.ticker-bar .ticker-trk{flex:1;overflow:hidden;position:relative;display:flex;align-items:center}
+.ticker-bar .ticker-inner{display:inline-flex;align-items:center;white-space:nowrap;will-change:transform}
+.ticker-bar .ticker-inner.running{animation:tickerScroll linear infinite}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-bar .t-item{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--hdr-txt);padding:0 24px;border-right:1px solid rgba(255,255,255,.1)}
+.ticker-bar .t-item .t-src{font-size:9px;background:rgba(255,255,255,.12);padding:2px 7px;border-radius:3px;flex-shrink:0}
 .ticker-bar .t-item a{color:#7dd3fc;text-decoration:none;transition:color .2s}
 .ticker-bar .t-item a:hover{color:#bae6fd;text-decoration:underline}
+.ticker-bar .ticker-trk:hover .ticker-inner{animation-play-state:paused}
 
 footer{text-align:center;padding:20px;color:var(--text2);font-size:14px;border-top:1px solid var(--border);margin-top:20px}
 footer .contact{margin-top:6px;font-size:13px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
@@ -211,7 +213,7 @@ footer .contact a{color:var(--accent)}
 <div class="ticker-bar">
   <div class="ticker-lbl2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> عاجل</div>
   <div class="ticker-trk">
-    <marquee id="newsTickerMarquee" behavior="scroll" direction="right" scrollamount="2" truespeed>جاري تحميل الأخبار العاجلة...</marquee>
+    <div id="newsTickerInner" class="ticker-inner">جاري تحميل الأخبار العاجلة...</div>
   </div>
 </div>
 <div id="newsSection" class="section">
@@ -318,9 +320,19 @@ function deduplicateNews(items){
 /* ===== نهاية خوارزمية منع التكرار ===== */
 function esc(t){if(!t)return"";var d=document.createElement("div");d.textContent=t;return d.innerHTML}
 function ta(d){if(!d)return"";var t=new Date(d);if(isNaN(t))return"";var n=Date.now()-t,m=Math.floor(n/60000);if(m<1)return"الآن";if(m<60)return"منذ "+m+" د"+(m>1?"ق":"");var h=Math.floor(m/60);if(h<24)return"منذ "+h+" س"+(h>1?"ة":"");var q=Math.floor(h/24);if(q<7)return"منذ "+q+" ي"+(q>1?"وم":"");return t.toLocaleDateString("ar-SA",{month:"short",day:"numeric"})}
-function ut(){var mq=document.getElementById("newsTickerMarquee");if(!mq)return
-if(!allNews.length){mq.innerHTML='<span class="t-item">جاري تحميل الأخبار العاجلة...</span>';return}
-mq.innerHTML=allNews.slice(0,20).map(function(n){var src=n.sName||"";return'<span class="t-item"><span class="t-src">'+src+'</span><a href="'+n.link+'" target="_blank" rel="noopener">'+esc(n.title)+'</a></span>'}).join("")}
+function ut(){
+  var inner=document.getElementById("newsTickerInner");if(!inner)return;
+  if(!allNews.length){inner.className="ticker-inner";inner.textContent="جاري تحميل الأخبار العاجلة...";return}
+  var items=allNews.slice(0,20).map(function(n){
+    return'<span class="t-item"><span class="t-src">'+esc(n.sName||"")+'</span><a href="'+n.link+'" target="_blank" rel="noopener">'+esc(n.title)+'</a></span>'
+  }).join("");
+  /* نكرر المحتوى مرتين لضمان الاستمرارية بلا انقطاع */
+  inner.innerHTML=items+items;
+  /* احسب مدة الحركة بناءً على عدد الأخبار */
+  var dur=Math.max(30,allNews.slice(0,20).length*4)+"s";
+  inner.style.animationDuration=dur;
+  inner.className="ticker-inner running";
+}
 async function fr(s){
 var k="n_"+btoa(s.url),c=localStorage.getItem(k);if(c){try{var d=JSON.parse(c);if(Date.now()-d.ts<CT)return d.items}catch(e){}}
 var r=await fetch("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(s.url),{signal:AbortSignal.timeout(12000)})
