@@ -63,34 +63,65 @@ header h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:8px
 .filter-btn{background:var(--card-bg);border:1px solid var(--border);color:var(--text);padding:6px 16px;border-radius:18px;cursor:pointer;font-size:14px;font-family:inherit;transition:all .2s}
 .filter-btn:hover{border-color:var(--accent);color:var(--accent)}
 .filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.news-grid{display:grid;grid-template-columns:1fr;gap:14px}
+.news-grid{display:grid;grid-template-columns:1fr;gap:16px}
 @media(min-width:640px){.news-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1024px){.news-grid{grid-template-columns:repeat(3,1fr)}}
-.card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;animation:slideIn .35s ease both}
+.card{position:relative;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;animation:slideIn .35s ease both;min-height:280px;cursor:pointer;background:#111}
 .card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.1s}.card:nth-child(4){animation-delay:.15s}.card:nth-child(5){animation-delay:.2s}.card:nth-child(6){animation-delay:.25s}
-.card:hover{transform:translateY(-3px);box-shadow:0 6px 24px rgba(0,0,0,.12)}
-.card-img{width:100%;height:170px;object-fit:cover;background:var(--border);transition:transform .3s}
-.card:hover .card-img{transform:scale(1.03)}
-.card-img-ph{width:100%;height:170px;background:linear-gradient(135deg,var(--accent),#6aafff);display:flex;align-items:center;justify-content:center;font-size:38px;opacity:.5}
-.card-body{padding:14px;flex:1;display:flex;flex-direction:column}
-.card-src{display:inline-block;font-size:12px;font-weight:700;padding:2px 12px;border-radius:10px;margin-bottom:8px;width:fit-content;letter-spacing:.3px}
-.card-src.alalam{background:#c0392b;color:#fff}
-.card-src.almayadeen{background:#1a5276;color:#fff}
-.card-src.almanar{background:#1e8449;color:#fff}
-.card-src.almasirah{background:#b7950b;color:#fff}
-.card-src.aletejah{background:#8e44ad;color:#fff}
-.card-src.alahad{background:#d35400;color:#fff}
-.card-src.alkawthar{background:#1a8cdb;color:#fff}
-.card-src.arabi21{background:#27ae60;color:#fff}
-.card-title{font-size:18px;font-weight:700;line-height:1.5;margin-bottom:6px;flex:1}
-.card-title a{color:var(--text)}
-.card-title a:hover{color:var(--accent);text-decoration:none}
-.card-desc{font-size:15px;color:var(--text2);line-height:1.6;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.card-ftr{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--text2);border-top:1px solid var(--border);padding-top:10px;margin-top:auto}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.22)}
+.card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s ease,filter .45s ease;filter:brightness(.75)}
+.card:hover .card-img{transform:scale(1.06);filter:brightness(.6)}
+.card-img-ph{position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:52px;opacity:.18}
+.card-img-ph.alalam{background:linear-gradient(145deg,#7b1010,#c0392b)}
+.card-img-ph.almayadeen{background:linear-gradient(145deg,#0d2a42,#1a5276)}
+.card-img-ph.almanar{background:linear-gradient(145deg,#0d3320,#1e8449)}
+.card-img-ph.almasirah{background:linear-gradient(145deg,#4a3600,#b7950b)}
+.card-img-ph.aletejah{background:linear-gradient(145deg,#3b1a5c,#8e44ad)}
+.card-img-ph.alahad{background:linear-gradient(145deg,#6b2400,#d35400)}
+.card-img-ph.alkawthar{background:linear-gradient(145deg,#0a3a5c,#1a8cdb)}
+.card-img-ph.arabi21{background:linear-gradient(145deg,#0d3d20,#27ae60)}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 45%,rgba(0,0,0,.05) 100%);transition:background .35s}
+.card:hover .card-overlay{background:linear-gradient(to top,rgba(0,0,0,.97) 0%,rgba(0,0,0,.65) 50%,rgba(0,0,0,.1) 100%)}
+.card-body{position:relative;z-index:1;padding:16px;flex:1;display:flex;flex-direction:column;justify-content:flex-end;min-height:280px}
+.card-src{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;margin-bottom:8px;width:fit-content;letter-spacing:.4px;backdrop-filter:blur(4px)}
+.card-src.alalam{background:rgba(192,57,43,.85);color:#fff}
+.card-src.almayadeen{background:rgba(26,82,118,.85);color:#fff}
+.card-src.almanar{background:rgba(30,132,73,.85);color:#fff}
+.card-src.almasirah{background:rgba(183,149,11,.85);color:#fff}
+.card-src.aletejah{background:rgba(142,68,173,.85);color:#fff}
+.card-src.alahad{background:rgba(211,84,0,.85);color:#fff}
+.card-src.alkawthar{background:rgba(26,140,219,.85);color:#fff}
+.card-src.arabi21{background:rgba(39,174,96,.85);color:#fff}
+.card-title{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:6px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.card-title a{color:#fff}
+.card-title a:hover{color:#93c5fd;text-decoration:none}
+.card-desc{font-size:13px;color:rgba(255,255,255,.72);line-height:1.55;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.card-ftr{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:rgba(255,255,255,.55);border-top:1px solid rgba(255,255,255,.12);padding-top:8px;margin-top:auto}
+.card-ftr a{color:rgba(255,255,255,.75);font-weight:600;transition:color .2s}
+.card-ftr a:hover{color:#93c5fd;text-decoration:none}
+.card-sources{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.card-src-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;backdrop-filter:blur(4px);letter-spacing:.3px}
+.card-src-badge.alalam{background:rgba(192,57,43,.85);color:#fff}
+.card-src-badge.almayadeen{background:rgba(26,82,118,.85);color:#fff}
+.card-src-badge.almanar{background:rgba(30,132,73,.85);color:#fff}
+.card-src-badge.almasirah{background:rgba(183,149,11,.85);color:#fff}
+.card-src-badge.aletejah{background:rgba(142,68,173,.85);color:#fff}
+.card-src-badge.alahad{background:rgba(211,84,0,.85);color:#fff}
+.card-src-badge.alkawthar{background:rgba(26,140,219,.85);color:#fff}
+.card-src-badge.arabi21{background:rgba(39,174,96,.85);color:#fff}
+.card-multi-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.card-multi-links a{font-size:11px;color:rgba(255,255,255,.65);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:2px 9px;border-radius:5px;transition:all .2s;text-decoration:none}
+.card-multi-links a:hover{background:rgba(255,255,255,.18);color:#fff}
+.dedup-badge{position:absolute;top:10px;left:10px;z-index:2;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;display:flex;align-items:center;gap:4px}
+.dedup-badge svg{opacity:.8}
 .err{text-align:center;padding:40px 20px;color:var(--text2);animation:fadeUp .3s}
 .err p{margin-bottom:10px}
 .err .retry-btn{background:var(--accent);color:#fff;border:none;padding:10px 28px;border-radius:10px;cursor:pointer;font-size:15px;font-family:inherit;transition:background .2s}
 .err .retry-btn:hover{background:var(--accent2)}
+#loadMoreSentinel{height:60px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:14px;gap:8px}
+#loadMoreSentinel .lm-spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;display:none}
+#loadMoreSentinel.loading .lm-spinner{display:block}
+#loadMoreSentinel .lm-txt{opacity:.6}
 
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--card-bg);color:var(--text);padding:12px 24px;border-radius:10px;box-shadow:0 6px 28px rgba(0,0,0,.2);border:1px solid var(--border);transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:200;font-size:13px;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px}
 .toast.show{transform:translateX(-50%) translateY(0)}
@@ -179,6 +210,7 @@ footer .contact a{color:var(--accent)}
     <div class="progress-bar"></div>
   </div>
   <div class="news-grid" id="newsGrid"></div>
+  <div id="loadMoreSentinel"><div class="lm-spinner"></div><span class="lm-txt"></span></div>
   <div class="err" id="errorMsg" style="display:none;">
     <p>&#x26A0;&#xFE0F; تعذر تحميل الأخبار</p>
     <p id="errorDetail"></p>
@@ -233,7 +265,45 @@ var S=[
 {id:"alkawthar",name:"الكوثر",type:"tg",channel:"alkawthartv"},
 {id:"arabi21",name:"عربي21",type:"tg",channel:"arabi21news"}
 ];
-var CT=300000,RI=600000,allNews=[],af="all",rt=null;
+var CT=300000,RI=600000,allNews=[],displayNews=[],af="all",rt=null,PAGE_SIZE=18,curPage=0,isLoadingMore=false,scrollObserver=null;
+
+/* ===== خوارزمية منع التكرار بـ Cosine Similarity ===== */
+var STOP_WORDS=new Set(["من","إلى","على","في","عن","مع","هذا","هذه","ذلك","التي","الذي","الذين","اللواتي","هو","هي","هم","أن","إن","كان","كانت","قد","لا","ما","لم","لن","بعد","قبل","حتى","إذا","ثم","أو","و","أي","كل","بين","ضد","حول","خلال","بسبب","رغم","إلا","فقط","أيضا","جدا","أكثر","أقل","مليون","مليار","ألف","يوم","أيام","سنة","عام","شهر","جاء","قال","أكد","أشار","كشف","طالب","دعا","أعلن","نفى","أوضح"]);
+function normText(t){return(t||"").replace(/[^\u0600-\u06FFa-z0-9\s]/gi," ").replace(/\s+/g," ").trim().toLowerCase()}
+function tokenize(t){return normText(t).split(" ").filter(function(w){return w.length>2&&!STOP_WORDS.has(w)})}
+function buildTF(tokens){var tf={};tokens.forEach(function(w){tf[w]=(tf[w]||0)+1});return tf}
+function cosineSim(tf1,tf2){var keys=new Set(Object.keys(tf1).concat(Object.keys(tf2)));var dot=0,n1=0,n2=0;keys.forEach(function(k){var a=tf1[k]||0,b=tf2[k]||0;dot+=a*b;n1+=a*a;n2+=b*b});return(n1&&n2)?dot/Math.sqrt(n1*n2):0}
+function deduplicateNews(items){
+  var THRESHOLD=0.42;
+  var tfs=items.map(function(it){return buildTF(tokenize(it.title))});
+  var groups=[],used=new Array(items.length).fill(false);
+  for(var i=0;i<items.length;i++){
+    if(used[i])continue;
+    var grp=[i];
+    for(var j=i+1;j<items.length;j++){
+      if(used[j])continue;
+      /* لا ندمج إذا كان المصدر نفسه */
+      if(items[i].sId===items[j].sId)continue;
+      if(cosineSim(tfs[i],tfs[j])>=THRESHOLD){grp.push(j);used[j]=true}
+    }
+    used[i]=true;
+    groups.push(grp);
+  }
+  return groups.map(function(grp){
+    var rep=items[grp[0]];
+    if(grp.length===1)return Object.assign({},rep,{dupSources:null});
+    var srcs=grp.map(function(idx){return{id:items[idx].sId,name:items[idx].sName,link:items[idx].link}});
+    /* اختر أفضل خبر: الأحدث أو الذي يمتلك صورة */
+    var best=grp.reduce(function(a,b){
+      var ia=items[a],ib=items[b];
+      if(ia.image&&!ib.image)return a;
+      if(!ia.image&&ib.image)return b;
+      return new Date(ia.pubDate||0)>new Date(ib.pubDate||0)?a:b;
+    });
+    return Object.assign({},items[best],{dupSources:srcs,pubDate:items[grp[0]].pubDate});
+  });
+}
+/* ===== نهاية خوارزمية منع التكرار ===== */
 function esc(t){if(!t)return"";var d=document.createElement("div");d.textContent=t;return d.innerHTML}
 function ta(d){if(!d)return"";var t=new Date(d);if(isNaN(t))return"";var n=Date.now()-t,m=Math.floor(n/60000);if(m<1)return"الآن";if(m<60)return"منذ "+m+" د"+(m>1?"ق":"");var h=Math.floor(m/60);if(h<24)return"منذ "+h+" س"+(h>1?"ة":"");var q=Math.floor(h/24);if(q<7)return"منذ "+q+" ي"+(q>1?"وم":"");return t.toLocaleDateString("ar-SA",{month:"short",day:"numeric"})}
 async function fetchTelegram(ch){var k="tg_"+ch,c=localStorage.getItem(k);if(c){try{var d=JSON.parse(c);if(Date.now()-d.ts<CT)return d.items}catch(e){}}
@@ -253,22 +323,58 @@ var j=await r.json()
 if(j.status!=="ok")throw new Error(j.message||"خطأ")
 var it=(j.items||[]).map(function(i){return{title:i.title||"",desc:(i.description||"").replace(/<[^>]*>/g,"").trim().substring(0,180),link:i.link||"#",pubDate:i.pubDate||"",image:i.enclosure?i.enclosure.link:(i.thumbnail||"")}}).filter(function(i){return i.title.length>5&&i.link!=="#"})
 localStorage.setItem(k,JSON.stringify({ts:Date.now(),items:it}));return it}
-function rn(){var g=document.getElementById("newsGrid"),f=allNews;if(af!=="all")f=allNews.filter(function(n){return n.sId===af})
-g.innerHTML=f.map(function(i){var img=i.image?'<img class="card-img" src="'+i.image+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'<div class="card-img-ph">&#x1F4F0;</div>'
-return'<div class="card">'+img+'<div class="card-body"><span class="card-src '+i.sId+'">'+i.sName+'</span><div class="card-title"><a href="'+i.link+'" target="_blank" rel="noopener">'+esc(i.title)+'</a></div><div class="card-desc">'+esc(i.desc)+'</div><div class="card-ftr"><span>'+ta(i.pubDate)+'</span><a href="'+i.link+'" target="_blank" rel="noopener">اقرأ المزيد</a></div></div></div>'}).join("")||'<div class="err"><p>&#x1F50D; لا توجد أخبار</p></div>'}
+function mkCard(i){
+var hasImg=!!i.image;
+var img=hasImg?'<img class="card-img" src="'+i.image+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.parentElement.querySelector(\'.card-img-ph\').style.display=\'flex\'">':'';
+var ph='<div class="card-img-ph '+i.sId+'" style="display:'+(hasImg?'none':'flex')+'">&#x1F4F0;</div>';
+var isMulti=i.dupSources&&i.dupSources.length>1;
+/* شارة عدد المصادر */
+var dedupBadge=isMulti?'<div class="dedup-badge"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'+i.dupSources.length+' مصادر</div>':'';
+/* صف شارات المصادر */
+var srcRow=isMulti
+  ?'<div class="card-sources">'+i.dupSources.map(function(s){return'<span class="card-src-badge '+s.id+'">'+s.name+'</span>'}).join('')+'</div>'
+  :'<span class="card-src '+i.sId+'">'+i.sName+'</span> ';
+/* روابط المصادر المتعددة */
+var multiLinks=isMulti
+  ?'<div class="card-multi-links">'+i.dupSources.map(function(s){return'<a href="'+s.link+'" target="_blank" rel="noopener">'+s.name+' &#x2192;</a>'}).join('')+'</div>'
+  :'<a href="'+i.link+'" target="_blank" rel="noopener">اقرأ المزيد &#x2192;</a>';
+return'<div class="card">'+img+ph+dedupBadge+'<div class="card-overlay"></div><div class="card-body">'+srcRow+'<div class="card-title"><a href="'+i.link+'" target="_blank" rel="noopener">'+esc(i.title)+'</a></div>'+(i.desc?'<div class="card-desc">'+esc(i.desc)+'</div>':'')+'<div class="card-ftr"><span>'+ta(i.pubDate)+'</span>'+multiLinks+'</div></div></div>'}
+function filteredNews(){
+  if(af==="all")return displayNews;
+  /* عند تصفية مصدر: أظهر الأخبار التي يشارك فيها هذا المصدر (سواء كانت مدمجة أو منفردة) */
+  return displayNews.filter(function(n){
+    if(n.sId===af)return true;
+    if(n.dupSources)return n.dupSources.some(function(s){return s.id===af});
+    return false;
+  });
+}
+function rn(){var g=document.getElementById("newsGrid"),sent=document.getElementById("loadMoreSentinel");curPage=0;g.innerHTML="";if(scrollObserver)scrollObserver.disconnect();var f=filteredNews();if(!f.length){g.innerHTML='<div class="err"><p>&#x1F50D; لا توجد أخبار</p></div>';sent.style.display="none";return}
+var first=f.slice(0,PAGE_SIZE);g.innerHTML=first.map(mkCard).join("");curPage=1;if(f.length<=PAGE_SIZE){sent.style.display="none"}else{sent.style.display="flex";sent.classList.remove("loading");sent.querySelector(".lm-txt").textContent="جاري التحميل...";setupObserver()}}
+function appendNews(){if(isLoadingMore)return;var f=filteredNews(),start=curPage*PAGE_SIZE,chunk=f.slice(start,start+PAGE_SIZE);if(!chunk.length){var sent=document.getElementById("loadMoreSentinel");sent.classList.remove("loading");sent.querySelector(".lm-txt").textContent="لا توجد أخبار إضافية";if(scrollObserver)scrollObserver.disconnect();return}
+isLoadingMore=true;var sent=document.getElementById("loadMoreSentinel");sent.classList.add("loading");sent.querySelector(".lm-txt").textContent="جاري تحميل المزيد..."
+setTimeout(function(){var g=document.getElementById("newsGrid");g.insertAdjacentHTML("beforeend",chunk.map(mkCard).join(""));curPage++;isLoadingMore=false;var remaining=f.length-(curPage*PAGE_SIZE);if(remaining<=0){sent.classList.remove("loading");sent.querySelector(".lm-txt").textContent="تم عرض جميع الأخبار ("+f.length+")";if(scrollObserver)scrollObserver.disconnect()}else{sent.classList.remove("loading");sent.querySelector(".lm-txt").textContent=""}},300)}
+function setupObserver(){if(scrollObserver)scrollObserver.disconnect();var sent=document.getElementById("loadMoreSentinel");scrollObserver=new IntersectionObserver(function(entries){if(entries[0].isIntersecting)appendNews()},{rootMargin:"200px"});scrollObserver.observe(sent)}
 function rf(){var c=document.getElementById("filters"),m={};allNews.forEach(function(n){m[n.sId]=n.sName})
-var ids=Object.keys(m),html='<button class="filter-btn'+(af==="all"?" active":"")+'" data-f="all">الكل ('+allNews.length+')</button>'
+var ids=Object.keys(m);
+var dedupCount=displayNews.length,rawCount=allNews.length,savedCount=rawCount-dedupCount;
+var allLabel='الكل ('+dedupCount+(savedCount>0?' <small style="opacity:.6;font-size:11px">-'+savedCount+' مكرر</small>':'')+')'
+var html='<button class="filter-btn'+(af==="all"?" active":"")+'" data-f="all">'+allLabel+'</button>'
 ids.forEach(function(id){var cnt=allNews.filter(function(n){return n.sId===id}).length;html+='<button class="filter-btn'+(af===id?" active":"")+'" data-f="'+id+'">'+m[id]+' ('+cnt+')</button>'})
-c.innerHTML=html;c.querySelectorAll(".filter-btn").forEach(function(b){b.addEventListener("click",function(){c.querySelectorAll(".filter-btn").forEach(function(x){x.classList.remove("active")});this.classList.add("active");af=this.dataset.f;rn()})})}
+c.innerHTML=html;c.querySelectorAll(".filter-btn").forEach(function(b){b.addEventListener("click",function(){c.querySelectorAll(".filter-btn").forEach(function(x){x.classList.remove("active")});this.classList.add("active");af=this.dataset.f;window.scrollTo({top:0,behavior:"smooth"});rn()})})}
 function stm(m){var t=document.getElementById("toast"),msg=document.getElementById("toastMsg");msg.textContent=m;t.classList.remove("show");void t.offsetWidth;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},3500)}
-async function fan(){var ld=document.getElementById("loading"),gr=document.getElementById("newsGrid"),er=document.getElementById("errorMsg")
-ld.classList.add("active");gr.innerHTML='<div class="err" style="padding:40px"><p style="opacity:.5">جاري التحميل...</p></div>';er.style.display="none"
+async function fan(){var ld=document.getElementById("loading"),gr=document.getElementById("newsGrid"),er=document.getElementById("errorMsg"),sent=document.getElementById("loadMoreSentinel")
+ld.classList.add("active");gr.innerHTML='<div class="err" style="padding:40px"><p style="opacity:.5">جاري التحميل...</p></div>';er.style.display="none";sent.style.display="none";if(scrollObserver)scrollObserver.disconnect()
 try{var rs=await Promise.allSettled(S.map(function(s){return fr(s)}));allNews=[]
 rs.forEach(function(r,i){if(r.status==="fulfilled"){r.value.forEach(function(it){allNews.push(Object.assign({},it,{sId:S[i].id,sName:S[i].name}))})}})
 allNews.sort(function(a,b){return new Date(b.pubDate||0)-new Date(a.pubDate||0)})
 if(!allNews.length){er.style.display="block";document.getElementById("errorDetail").textContent="جميع المصادر غير متوفرة";ld.classList.remove("active");return}
+/* تطبيق خوارزمية الدمج */
+displayNews=deduplicateNews(allNews);
+var saved=allNews.length-displayNews.length;
 rf();rn();ut();document.getElementById("lastUpdate").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"})
-var fl=rs.filter(function(r){return r.status==="rejected"}).length;stm(fl?"تم التحديث. "+fl+" مصدر غير متوفر":"تم تحديث الأخبار")
+var fl=rs.filter(function(r){return r.status==="rejected"}).length;
+var msg=saved>0?"تم التحديث. تم دمج "+saved+" خبر متكرر":"تم تحديث الأخبار";
+stm(fl?msg+". "+fl+" مصدر غير متوفر":msg)
 if(rt)clearTimeout(rt);rt=setTimeout(fan,RI)}catch(e){er.style.display="block";document.getElementById("errorDetail").textContent=e.message}
 ld.classList.remove("active")}
 var G={"الداخلية":["نزوى","بهلا","منح","إزكي","سمائل","الحمراء","بدبد","ضنك"],"الظاهرة":["عبري","ينقل"],"شمال الباطنة":["صحار","شناص","لوى","صحم","الخابورة","السويق"],"جنوب الباطنة":["الرستاق","العوابي","نخل","وادي المعاول","المصنعة","بركاء"],"مسقط":["مسقط","مطرح","بوشر","السيب","قريات","العامرات"],"شمال الشرقية":["إبراء","المضيبي","القابل","وادي بني خالد"],"جنوب الشرقية":["صور","الكامل والوافي","جعلان بني بو علي","جعلان بني بو حسن"],"الوسطى":["هيماء","محوت","الدقم","الجازر"],"ظفار":["صلالة","طاقة","مرباط","سدح","رخيوت","ضلكوت","مقشن","ثمريت"],"مسندم":["خصب","بخا","دبا","مدحاء"]}
