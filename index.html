@@ -42,7 +42,7 @@ header h1{font-size:23px;font-weight:800;display:flex;align-items:center;gap:8px
 .ticker-bar .ticker-trk{flex:1;overflow:hidden;position:relative;display:flex;align-items:center;direction:ltr}
 .ticker-bar .ticker-inner{display:inline-flex;align-items:center;white-space:nowrap;will-change:transform;min-width:100%}
 .ticker-bar .ticker-inner.running{animation:tickerScroll linear infinite}
-@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(50%)}}
 .ticker-bar .t-item{display:inline-flex;align-items:center;gap:8px;font-size:15px;color:var(--hdr-txt);padding:0 24px;border-left:1px solid rgba(255,255,255,.1);direction:rtl}
 .ticker-bar .t-item .t-src{font-size:9px;background:rgba(255,255,255,.12);padding:2px 7px;border-radius:3px;flex-shrink:0}
 .ticker-bar .t-item a{color:#7dd3fc;text-decoration:none}
@@ -344,7 +344,7 @@ function ut(){
   inner.innerHTML=html+html;
   inner.classList.remove("running");inner.style.animation="none";
   void inner.offsetWidth;var totalW=inner.scrollWidth||1;
-  inner.style.animation="";inner.style.animationDuration=Math.max(Math.round((totalW/2)/70),5)+"s";inner.style.animationTimingFunction="linear";inner.style.animationIterationCount="infinite";inner.classList.add("running");
+  inner.style.animation="";inner.style.animationDuration=Math.max(Math.round((totalW/2)/50),4)+"s";inner.style.animationTimingFunction="linear";inner.style.animationIterationCount="infinite";inner.classList.add("running");
 }
 
 async function fr(s){
