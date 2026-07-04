@@ -181,9 +181,11 @@ header h1{font-size:23px;font-weight:800;display:flex;align-items:center;gap:8px
 .forecast-day .day-temp{font-size:13px;font-weight:600}
 
 /* ===== FOOTER ===== */
-footer{text-align:center;padding:20px;color:var(--text2);font-size:14px;border-top:1px solid var(--border);margin-top:20px}
-footer .contact{margin-top:6px;font-size:13px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+footer{text-align:center;padding:10px 20px;color:var(--text2);font-size:12px;border-top:1px solid var(--border);background:var(--card-bg);position:fixed;bottom:0;left:0;right:0;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.08)}
+footer .contact{margin-top:4px;font-size:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 footer .contact a{color:var(--accent)}
+.page-layout{padding-bottom:80px}
+@media(max-width:768px){.page-layout{padding-bottom:70px}}
 .visit-counter{display:inline-flex;align-items:center;gap:10px;background:var(--card-bg);border:1px solid var(--border);border-radius:40px;padding:6px 18px;margin-top:12px;box-shadow:var(--shadow);font-size:13px}
 .visit-counter .vc-icon{font-size:18px;line-height:1}
 .visit-counter .vc-label{color:var(--text2)}
