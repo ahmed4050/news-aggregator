@@ -342,9 +342,7 @@ function ut(){
   var html=allNews.slice(0,20).map(function(n){return'<span class="t-item"><span class="t-src">'+esc(n.sName||"")+'</span><a href="'+n.link+'" target="_blank" rel="noopener">'+esc(n.title)+'</a></span>'}).join("");
   inner.innerHTML=html+html;
   inner.style.animation="none";void inner.offsetWidth;
-  var totalW=inner.scrollWidth||1;
-  var dur=Math.max(Math.round((totalW/2)/300),3);
-  inner.style.animation="tickerScroll "+dur+"s linear infinite";
+  inner.style.animation="tickerScroll 12s linear infinite";
 }
 
 async function fr(s){
