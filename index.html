@@ -344,7 +344,7 @@ function ut(){
   inner.innerHTML=html+html;
   inner.classList.remove("running");inner.style.animation="none";
   void inner.offsetWidth;var totalW=inner.scrollWidth||1;
-  inner.style.animation="";inner.style.animationDuration=Math.max(Math.round((totalW/2)/100),3)+"s";inner.style.animationTimingFunction="linear";inner.style.animationIterationCount="infinite";inner.classList.add("running");
+  inner.style.animation="";inner.style.animationDuration=Math.max(Math.round((totalW/2)/300),2)+"s";inner.style.animationTimingFunction="linear";inner.style.animationIterationCount="infinite";inner.classList.add("running");
 }
 
 async function fr(s){
